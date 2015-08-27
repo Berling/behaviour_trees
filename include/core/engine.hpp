@@ -5,6 +5,9 @@
 #include <string>
 
 #include <asset/asset_manager.hpp>
+#include <ecs/component.hpp>
+#include <ecs/entity.hpp>
+#include <ecs/entity_manager.hpp>
 
 namespace graphics {
 	class graphics_system;
@@ -15,6 +18,7 @@ namespace core {
 	private:
 		bool quit_;
 		asset::asset_manager asset_manager_;
+		ecs::entity_manager entity_manager_;
 		std::unique_ptr<graphics::graphics_system> graphics_system_;
 
 	public:
@@ -33,6 +37,10 @@ namespace core {
 
 		auto& asset_manager() {
 			return asset_manager_;
+		}
+
+		auto& entity_manager() {
+			return entity_manager_;
 		}
 
 		auto& graphics_system() {

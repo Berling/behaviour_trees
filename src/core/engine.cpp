@@ -9,7 +9,7 @@
 
 namespace core {
 	engine::engine() noexcept
-	: quit_{false} {
+	: quit_{false}, entity_manager_{*this} {
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 			auto sdl_error = std::string{SDL_GetError()};
 			SDL_ClearError();
@@ -46,6 +46,7 @@ namespace core {
 			delta_time = current_time - last_time;
 
 			update(delta_time);
+			entity_manager_.clear();
 		}
 	}
 
