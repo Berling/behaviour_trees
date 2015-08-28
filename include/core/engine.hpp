@@ -9,6 +9,10 @@
 #include <ecs/entity.hpp>
 #include <ecs/entity_manager.hpp>
 
+namespace gameplay {
+	class gameplay_system;
+}
+
 namespace graphics {
 	class graphics_system;
 }
@@ -24,6 +28,7 @@ namespace core {
 		asset::asset_manager asset_manager_;
 		std::unique_ptr<graphics::graphics_system> graphics_system_;
 		std::unique_ptr<rendering::rendering_system> rendering_system_;
+		std::unique_ptr<gameplay::gameplay_system> gameplay_system_;
 		ecs::entity_manager entity_manager_;
 
 	public:
@@ -54,6 +59,10 @@ namespace core {
 
 		auto& rendering_system() {
 			return *rendering_system_;
+		}
+
+		auto& gameplay_system() {
+			return *gameplay_system_;
 		}
 	};
 }
