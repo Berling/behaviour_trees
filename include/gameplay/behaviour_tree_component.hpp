@@ -4,6 +4,7 @@
 #include <memory>
 
 #include <ecs/component.hpp>
+#include <utils/id_generator.hpp>
 
 namespace core {
     class engine;
@@ -53,6 +54,10 @@ namespace gameplay {
 
         void current_node(node* current_node) noexcept {
             current_node_ = current_node;
+        }
+
+        static auto type_id() noexcept {
+            return utils::type_id<behaviour_tree_component>();
         }
     };
 }
