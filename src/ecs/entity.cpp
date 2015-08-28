@@ -10,7 +10,7 @@ namespace ecs {
     : engine_{engine}, id_{utils::id_generator<entity>()}, position_{position}, rotation_{rotation}, scale_{scale}, layer_{layer} { }
 
     glm::mat4 entity::transform() const {
-        auto norm = glm::angleAxis(glm::radians(rotation_), glm::vec3{0.f, 0.f, 1.f});
+        auto norm = glm::angleAxis(rotation_, glm::vec3{0.f, 0.f, 1.f});
         auto transform = glm::toMat4(norm);
         auto scale = glm::scale(glm::mat4{}, glm::vec3{scale_, 1.f});
         transform =  transform * scale;
