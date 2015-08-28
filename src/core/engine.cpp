@@ -29,13 +29,18 @@ namespace core {
 		rendering_system_ = std::make_unique<rendering::rendering_system>(*this);
 		gameplay_system_ = std::make_unique<gameplay::gameplay_system>(*this);
 
-		auto& s = entity_manager_.emplace_back(glm::vec2{400.f, 300.f}, 0.f, glm::vec2{1.f});
+		auto& s = entity_manager_.emplace_back(glm::vec2{200.f, 150.f}, 0.f, glm::vec2{1.f});
 		s.emplace_back<rendering::sprite_component>("textures/enterprise.dds");
 		auto& mc = s.emplace_back<gameplay::movement_component>();
 		mc.angular_velocity(glm::radians(30.f));
 		mc.acceleration(glm::vec2{3.f, -2.f});
 		auto& bt = s.emplace_back<gameplay::behaviour_tree_component>();
 		bt.root<gameplay::success_node>();
+
+		auto& station = entity_manager_.emplace_back(glm::vec2{400.f, 300.f}, 0.f, glm::vec2{1.f});
+		station.emplace_back<rendering::sprite_component>("textures/space_station.dds");
+		auto& station_mc = station.emplace_back<gameplay::movement_component>();
+		station_mc.angular_velocity(glm::radians(30.f));
 	}
 
 	engine::~engine() {
