@@ -38,3 +38,6 @@ obj/
 
 ### log files ###
 *.log
+
+### build dir ###
+build/
