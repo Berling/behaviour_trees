@@ -22,9 +22,9 @@ namespace core {
 	private:
 		bool quit_;
 		asset::asset_manager asset_manager_;
-		ecs::entity_manager entity_manager_;
 		std::unique_ptr<graphics::graphics_system> graphics_system_;
 		std::unique_ptr<rendering::rendering_system> rendering_system_;
+		ecs::entity_manager entity_manager_;
 
 	public:
 		engine() noexcept;
