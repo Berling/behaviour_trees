@@ -6,6 +6,11 @@
 
 #include <core/engine.hpp>
 #include <graphics/graphics_system.hpp>
+#include <rendering/rectangle.hpp>
+#include <rendering/rendering_system.hpp>
+#include <rendering/sprite_component.hpp>
+
+using namespace std::literals;
 
 namespace core {
 	engine::engine() noexcept
@@ -15,7 +20,12 @@ namespace core {
 			SDL_ClearError();
 			throw std::runtime_error{"could not initialize SDL" + sdl_error};
 		}
+
 		graphics_system_ = std::make_unique<graphics::graphics_system>(*this);
+		rendering_system_ = std::make_unique<rendering::rendering_system>(*this);
+
+		auto& s = entity_manager_.emplace_back(glm::vec2{400.f, 300.f}, 0.f, glm::vec2{1.f});
+		s.emplace_back<rendering::sprite_component>("textures/dummy.dds");
 	}
 
 	engine::~engine() {
@@ -24,6 +34,7 @@ namespace core {
 
 	void engine::update(float delta_time) {
 		graphics_system_->begin();
+		rendering_system_->update(delta_time);
 		graphics_system_->end(delta_time);
 	}
 

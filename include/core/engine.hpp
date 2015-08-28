@@ -13,6 +13,10 @@ namespace graphics {
 	class graphics_system;
 }
 
+namespace rendering {
+	class rendering_system;
+}
+
 namespace core {
 	class engine {
 	private:
@@ -20,6 +24,7 @@ namespace core {
 		asset::asset_manager asset_manager_;
 		ecs::entity_manager entity_manager_;
 		std::unique_ptr<graphics::graphics_system> graphics_system_;
+		std::unique_ptr<rendering::rendering_system> rendering_system_;
 
 	public:
 		engine() noexcept;
@@ -45,6 +50,10 @@ namespace core {
 
 		auto& graphics_system() {
 			return *graphics_system_;
+		}
+
+		auto& rendering_system() {
+			return *rendering_system_;
 		}
 	};
 }
