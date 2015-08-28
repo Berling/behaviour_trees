@@ -35,18 +35,18 @@ namespace ecs {
 
         template <typename component_type, typename... arguments>
         component_type& emplace_back(arguments... args) {
-            auto it = components_.find(component_type::type_id());
+            auto it = components_.find(component_type::component_id());
             if (it == components_.end()) {
-                components_.emplace(std::make_pair(component_type::type_id(), std::make_unique<component_type>(std::forward<arguments>...)));
+                components_.emplace(std::make_pair(component_type::component_id(), std::make_unique<component_type>(engine_, *this, std::forward<arguments>(args)...)));
             } else {
-                utils::log(utils::log_level::LOG_WARNING) << "entity already has component with type id " << component_type::type_id() << std::endl;
+                utils::log(utils::log_level::LOG_WARNING) << "entity already has component with type id " << component_type::component_id() << std::endl;
             }
-            return *components_[component_type::type_id()];
+            return *static_cast<component_type*>(components_[component_type::component_id()].get());
         }
 
         template <typename component_type>
         component_type* component() noexcept {
-            auto it = components_.find(component_type::type_id());
+            auto it = components_.find(component_type::component_id());
             if (it != components_.end()) {
                 return static_cast<component_type*>(it->second.get());
             }
