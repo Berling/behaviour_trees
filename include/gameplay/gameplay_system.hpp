@@ -9,6 +9,7 @@ namespace core {
 }
 
 namespace gameplay {
+    class behaviour_tree_component;
     class movement_component;
 }
 
@@ -16,8 +17,10 @@ namespace gameplay {
     class gameplay_system {
     private:
         core::engine& engine_;
+        std::vector<behaviour_tree_component*> behaviour_tree_components_;
         std::vector<movement_component*> movement_components_;
 
+        friend class behaviour_tree_component;
         friend class movement_component;
 
     public:
@@ -33,6 +36,8 @@ namespace gameplay {
         void update(float delta_time);
 
     private:
+        void register_component(behaviour_tree_component* component);
+        void unregister_component(behaviour_tree_component* component);
         void register_component(movement_component* component);
         void unregister_component(movement_component* component);
     };
