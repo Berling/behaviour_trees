@@ -5,6 +5,7 @@
 #include <gameplay/gameplay_system.hpp>
 #include <gameplay/movement_component.hpp>
 #include <graphics/graphics_system.hpp>
+#include <rendering/rendering_system.hpp>
 
 namespace gameplay {
     movement_component::movement_component(core::engine& engine, ecs::entity& owner) noexcept
@@ -50,5 +51,9 @@ namespace gameplay {
             rotation += 2.f * glm::pi<float>();
         }
         owner_.rotation(rotation);
+
+        auto& rendering_system = engine_.rendering_system();
+        rendering_system.draw_line(position, position + velocity_, glm::vec3{1.f, 0.f, 0.f});
+        rendering_system.draw_line(position, position + acceleration_, glm::vec3{0.f, 1.f, 0.f});
     }
 }

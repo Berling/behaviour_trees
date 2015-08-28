@@ -14,7 +14,7 @@
 
 namespace rendering {
     rendering_system::rendering_system(core::engine& engine) noexcept
-    : engine_{engine} {
+    : engine_{engine}, line_vbo_{GL_DYNAMIC_DRAW} {
         sprite_vertex_layout_.emplace_back("_position", 2, GL_FLOAT, false, sizeof(vertex), offsetof(vertex, position));
         sprite_vertex_layout_.emplace_back("_texcoord", 2, GL_FLOAT, false, sizeof(vertex), offsetof(vertex, texcoord));
 
@@ -40,6 +40,26 @@ namespace rendering {
         projection_ = glm::ortho(0.f, width, height, 0.f);
 
         rectangle_ = std::make_unique<rectangle>(*this);
+
+        line_vertex_layout_.emplace_back("_position", 2, GL_FLOAT, false, sizeof(line_vertex), offsetof(line_vertex, position));
+        line_vertex_layout_.emplace_back("_color", 3, GL_FLOAT, false, sizeof(line_vertex), offsetof(line_vertex, color));
+
+        vertex_shader = graphics_system.shader_manager().load("shaders/line.vs", GL_VERTEX_SHADER);
+        if (!vertex_shader) {
+            throw std::runtime_error{"could not load shader from file shaders/line.vs"};
+        }
+        line_program_.attach_shader(vertex_shader);
+
+        fragment_shader = graphics_system.shader_manager().load("shaders/line.fs", GL_FRAGMENT_SHADER);
+        if (!fragment_shader) {
+            throw std::runtime_error{"could not load shader from file shaders/line.fs"};
+        }
+        line_program_.attach_shader(fragment_shader);
+
+        line_vertex_layout_.setup_program(line_program_, "frag_color");
+        line_program_.link();
+
+        line_vertex_layout_.setup_layout(line_vao_, &line_vbo_);
     }
 
     void rendering_system::update(float delta_time) {
@@ -57,6 +77,19 @@ namespace rendering {
         }
 
         glDisable(GL_BLEND);
+
+        line_vbo_.data(sizeof(line_vertex) * line_vertices_.size(), line_vertices_.data());
+        line_vao_.bind();
+        line_program_.use();
+        line_program_.uniform("projection", false, projection_);
+        line_program_.uniform("view", false, view_);
+        glDrawArrays(GL_LINES, 0, line_vertices_.size());
+        line_vertices_.clear();
+    }
+
+    void rendering_system::draw_line(const glm::vec2& from, const glm::vec2& to, const glm::vec3& color) {
+        line_vertices_.emplace_back(line_vertex{from, color});
+        line_vertices_.emplace_back(line_vertex{to, color});
     }
 
     void rendering_system::register_component(sprite_component* component) {
