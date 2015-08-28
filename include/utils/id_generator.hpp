@@ -4,8 +4,14 @@
 namespace utils {
     template <typename t>
     auto id_generator() {
-        static unsigned long long next_id = 0;
+        static auto next_id = 0ull;
         return ++next_id;
+    }
+
+    template <typename t>
+    auto type_id() {
+        static auto type_id = id_generator<void>();
+        return type_id;
     }
 }
 
