@@ -28,8 +28,6 @@ namespace ecs {
         auto& owner() const noexcept {
             return owner_;
         }
-
-        virtual unsigned long long type_id() const noexcept = 0;
     };
 }
 

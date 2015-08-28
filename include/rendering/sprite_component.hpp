@@ -32,13 +32,10 @@ namespace rendering {
             return *texture_;
         }
 
-        unsigned long long type_id() const noexcept {
-            return type_id();
-        }
-
-        static auto component_id() noexcept {
+        static auto type_id() noexcept {
             return utils::type_id<sprite_component>();
         }
+
     };
 }
 
