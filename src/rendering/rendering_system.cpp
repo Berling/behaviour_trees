@@ -37,7 +37,7 @@ namespace rendering {
 
         auto width = static_cast<float>(graphics_system.width());
         auto height = static_cast<float>(graphics_system.height());
-        projection_ = glm::ortho(0.f, width, height, 0.f);
+        projection_ = glm::ortho(0.f, width, 0.f, height);
 
         rectangle_ = std::make_unique<rectangle>(*this);
 

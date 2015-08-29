@@ -12,7 +12,7 @@ namespace gameplay {
 
 namespace gameplay {
     class node {
-    private:
+    protected:
         core::engine& engine_;
         behaviour_tree_component& owner_;
         node* parent_;

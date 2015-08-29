@@ -21,7 +21,7 @@ namespace gameplay {
 
     void movement_component::update(float delta_time) noexcept {
         velocity_ += delta_time * acceleration_;
-        if (velocity_.length() > max_velocity_) {
+        if (glm::length(velocity_) > max_velocity_) {
             velocity_ = glm::normalize(velocity_);
             velocity_ *= max_velocity_;
         }
