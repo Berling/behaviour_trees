@@ -7,6 +7,7 @@
 #include <core/engine.hpp>
 #include <gameplay/behaviour_tree_component.hpp>
 #include <gameplay/gameplay_system.hpp>
+#include <gameplay/flee_node.hpp>
 #include <gameplay/movement_component.hpp>
 #include <gameplay/move_to_node.hpp>
 #include <gameplay/success_node.hpp>
@@ -35,7 +36,7 @@ namespace core {
 		auto& station_mc = station.emplace_back<gameplay::movement_component>();
 		station_mc.angular_velocity(glm::radians(30.f));
 
-		auto& s = entity_manager_.emplace_back(glm::vec2{100.f, 100.f}, 0.f, glm::vec2{1.f});
+		auto& s = entity_manager_.emplace_back(glm::vec2{0.f, 0.f}, 0.f, glm::vec2{1.f});
 		s.emplace_back<rendering::sprite_component>("textures/enterprise.dds");
 		auto& mc = s.emplace_back<gameplay::movement_component>();
 		auto& bt = s.emplace_back<gameplay::behaviour_tree_component>();
