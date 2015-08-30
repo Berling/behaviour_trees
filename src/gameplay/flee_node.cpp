@@ -4,18 +4,32 @@
 #include <gameplay/behaviour_tree_component.hpp>
 #include <gameplay/flee_node.hpp>
 #include <gameplay/movement_component.hpp>
+#include <gameplay/target_component.hpp>
 
 namespace gameplay {
     flee_node::flee_node(core::engine& engine, behaviour_tree_component& owner, node* parent, unsigned long long target, float distance) noexcept
     : node{engine, owner, parent}, target_{target}, distance_{distance} {}
 
     node_state flee_node::update(float delta_time) {
-        auto target = engine_.entity_manager().resolve(target_);
-        if (!target) {
-            return node_state::failure;
+        auto& owner = owner_.owner();
+
+        ecs::entity* target = nullptr;
+        if (target_ == 0) {
+            auto tc = owner.component<target_component>();
+            if (!tc) {
+                return node_state::failure;
+            }
+            target = engine_.entity_manager().resolve(tc->target());
+            if (!target) {
+                return node_state::failure;
+            }
+        } else {
+            target = engine_.entity_manager().resolve(target_);
+            if (!target) {
+                return node_state::failure;
+            }
         }
 
-        auto& owner = owner_.owner();
         auto mc = owner.component<movement_component>();
         if (!mc) {
             return node_state::failure;

@@ -64,7 +64,7 @@ namespace core {
 		sn.emplace_back<gameplay::move_random_node>(station.id(), 200.f);
 
 		auto& follow_enemy = main_sequence.emplace_back<gameplay::until_fail_node>();
-		auto& follow_enemy_sequence = follow_enemy.child<gameplay::sequence_node>();
+		auto& follow_enemy_sequence = follow_enemy.child<gameplay::parallel_node>();
 		follow_enemy_sequence.emplace_back<gameplay::move_to_node>(0, 2.f);
 
 
