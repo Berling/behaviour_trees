@@ -63,8 +63,10 @@ namespace core {
 		inv.child<gameplay::enemy_sighted_node>(200.f);
 		sn.emplace_back<gameplay::move_random_node>(station.id(), 200.f);
 
-		auto& stop_inv = main_sequence.emplace_back<gameplay::invert_node>();
-		stop_inv.child<gameplay::stop_movement_node>();
+		auto& follow_enemy = main_sequence.emplace_back<gameplay::until_fail_node>();
+		auto& follow_enemy_sequence = follow_enemy.child<gameplay::sequence_node>();
+		follow_enemy_sequence.emplace_back<gameplay::move_to_node>(0, 2.f);
+
 
 		auto& klingon = entity_manager_.emplace_back(glm::vec2{700.f, 500.f}, 0.f, glm::vec2{1.f});
 		klingon.emplace_back<rendering::sprite_component>("textures/klingon.dds");

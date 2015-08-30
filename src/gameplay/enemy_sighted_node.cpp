@@ -3,6 +3,7 @@
 #include <gameplay/alignment_component.hpp>
 #include <gameplay/behaviour_tree_component.hpp>
 #include <gameplay/enemy_sighted_node.hpp>
+#include <gameplay/target_component.hpp>
 
 namespace gameplay {
     enemy_sighted_node::enemy_sighted_node(core::engine& engine, behaviour_tree_component& owner, node* parent, float radius)
@@ -25,6 +26,11 @@ namespace gameplay {
                     auto enemy_position = enemy->position();
                     auto distance = enemy_position - owner_position;
                     if (glm::length(distance) <= radius_) {
+                        auto tc = owner.component<target_component>();
+                        if (tc) {
+                            tc->target(enemy->id());
+                        }
+
                         return node_state::success;
                     }
                 }
