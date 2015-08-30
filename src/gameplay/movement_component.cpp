@@ -28,16 +28,6 @@ namespace gameplay {
 
         auto position = owner_.position();
         position += delta_time * velocity_;
-        if (position.x > engine_.graphics_system().width()) {
-            position.x -= engine_.graphics_system().width();
-        } else if (position.x < 0.f) {
-            position.x += engine_.graphics_system().width();
-        }
-        if (position.y > engine_.graphics_system().height()) {
-            position.y -= engine_.graphics_system().height();
-        } else if (position.y < 0.f) {
-            position.y += engine_.graphics_system().height();
-        }
         owner_.position(position);
 
         angular_velocity_ += delta_time * angular_acceleration_;

@@ -5,6 +5,7 @@
 
 #include <core/engine.hpp>
 #include <ecs/entity.hpp>
+#include <ecs/entity_manager.hpp>
 #include <graphics/graphics_system.hpp>
 #include <graphics/shader_manager.hpp>
 #include <rendering/rectangle.hpp>
@@ -63,12 +64,14 @@ namespace rendering {
     }
 
     void rendering_system::update(float delta_time) {
+        auto camera_position = -engine_.entity_manager().resolve(2)->position() + glm::vec2{400.f, 300.f};
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         sprite_program_.use();
         sprite_program_.uniform("projection", false, projection_);
-        sprite_program_.uniform("view", false, view_);
+        sprite_program_.uniform("view", false, glm::translate(glm::mat4{}, glm::vec3{camera_position, 0.f}));
         for (auto& sprite : sprite_components_) {
             sprite_program_.uniform("model", false, sprite->owner().transform());
             sprite_program_.uniform("albedo", 0);
@@ -82,7 +85,7 @@ namespace rendering {
         line_vao_.bind();
         line_program_.use();
         line_program_.uniform("projection", false, projection_);
-        line_program_.uniform("view", false, view_);
+        line_program_.uniform("view", false, glm::translate(glm::mat4{}, glm::vec3{camera_position, 0.f}));
         glDrawArrays(GL_LINES, 0, line_vertices_.size());
         line_vertices_.clear();
     }
