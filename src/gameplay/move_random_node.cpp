@@ -1,5 +1,4 @@
 #include <limits>
-#include <random>
 
 #include <glm/glm.hpp>
 
@@ -25,13 +24,10 @@ namespace gameplay {
             return node_state::failure;
         }
 
-        static std::random_device rd;
-        static std::mt19937 rng{rd()};
-        static std::uniform_int_distribution<float> uni{0, 360};
         static auto target_set = false;
         static auto alpha = 0.f;
         if (!target_set) {
-            alpha = glm::radians(uni(rng));
+            alpha = glm::radians(uni_(rng_));
             target_set = true;
         }
 
