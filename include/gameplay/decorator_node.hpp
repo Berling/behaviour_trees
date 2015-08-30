@@ -16,14 +16,20 @@ namespace gameplay {
 
 namespace gameplay {
     class decorator_node : public node {
-    private:
+    protected:
         std::unique_ptr<node> child_;
 
     public:
-        decorator_node(core::engine& engine, behaviour_tree_component& owner, node* parent, std::unique_ptr<node>&& child);
+        decorator_node(core::engine& engine, behaviour_tree_component& owner, node* parent);
         ~decorator_node() = default;
 
         virtual node_state update(float delta_time) = 0;
+
+        template <typename t, typename... arguments>
+        auto& child(arguments&&... args) {
+            child_ = std::make_unique<t>(engine_, owner_, this, std::forward<arguments>(args)...);
+            return *static_cast<t*>(child_.get());
+        }
     };
 }
 

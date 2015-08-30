@@ -14,6 +14,7 @@
 #include <gameplay/sequence_node.hpp>
 #include <gameplay/stop_movement_node.hpp>
 #include <gameplay/success_node.hpp>
+#include <gameplay/until_fail_node.hpp>
 #include <graphics/graphics_system.hpp>
 #include <rendering/rectangle.hpp>
 #include <rendering/rendering_system.hpp>
@@ -43,11 +44,14 @@ namespace core {
 		s.emplace_back<rendering::sprite_component>("textures/enterprise.dds");
 		auto& mc = s.emplace_back<gameplay::movement_component>();
 		auto& bt = s.emplace_back<gameplay::behaviour_tree_component>();
-		auto& root = bt.root<gameplay::selection_node>();
-		root.emplace_back<gameplay::move_to_node>(station.id(), 20.f);
-		root.emplace_back<gameplay::stop_movement_node>();
-		root.emplace_back<gameplay::flee_node>(station.id(), 200.f);
-		root.emplace_back<gameplay::stop_movement_node>();
+
+		auto& uf = bt.root<gameplay::until_fail_node>();
+
+		auto& sn = uf.child<gameplay::sequence_node>();
+		sn.emplace_back<gameplay::move_to_node>(station.id(), 20.f);
+		sn.emplace_back<gameplay::stop_movement_node>();
+		sn.emplace_back<gameplay::flee_node>(station.id(), 200.f);
+		sn.emplace_back<gameplay::stop_movement_node>();
 	}
 
 	engine::~engine() {

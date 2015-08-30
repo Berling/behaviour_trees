@@ -13,11 +13,13 @@ namespace gameplay {
 
         auto result = nodes_[current_node_]->update(delta_time);
         if (result == node_state::success) {
+            current_node_ = 0;
             return node_state::success;
         } else if (result == node_state::failure) {
             if (current_node_ < nodes_.size() - 1) {
                 ++current_node_;
             } else {
+                current_node_ = 0;
                 return node_state::failure;
             }
         }
