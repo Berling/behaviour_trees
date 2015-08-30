@@ -43,9 +43,10 @@ namespace gameplay {
         }
 
         template <typename t, typename... arguments>
-        void root(arguments&&... args) {
+        auto& root(arguments&&... args) {
             root_ = std::make_unique<t>(engine_, *this, nullptr, std::forward<arguments>(args)...);
             current_node_ = root_.get();
+            return *static_cast<t*>(root_.get());
         }
 
         auto current_node() noexcept {
