@@ -5,6 +5,7 @@
 #include <utils/logger.hpp>
 
 #include <core/engine.hpp>
+#include <gameplay/alignment_component.hpp>
 #include <gameplay/behaviour_tree_component.hpp>
 #include <gameplay/gameplay_system.hpp>
 #include <gameplay/flee_node.hpp>
@@ -43,16 +44,16 @@ namespace core {
 
 		auto& s = entity_manager_.emplace_back(glm::vec2{200.f, 100.f}, 0.f, glm::vec2{1.f});
 		s.emplace_back<rendering::sprite_component>("textures/enterprise.dds");
+		s.emplace_back<gameplay::alignment_component>(gameplay::alignment::good);
 		auto& mc = s.emplace_back<gameplay::movement_component>();
 		auto& bt = s.emplace_back<gameplay::behaviour_tree_component>();
-
 		auto& uf = bt.root<gameplay::until_fail_node>();
-
 		auto& sn = uf.child<gameplay::sequence_node>();
 		sn.emplace_back<gameplay::move_random_node>(station.id(), 200.f);
 
 		auto& klingon = entity_manager_.emplace_back(glm::vec2{700.f, 500.f}, 0.f, glm::vec2{1.f});
 		klingon.emplace_back<rendering::sprite_component>("textures/klingon.dds");
+		klingon.emplace_back<gameplay::alignment_component>(gameplay::alignment::evil);
 		klingon.emplace_back<gameplay::movement_component>();
 		auto& kbt = klingon.emplace_back<gameplay::behaviour_tree_component>();
 		auto& kuf = kbt.root<gameplay::until_fail_node>();
