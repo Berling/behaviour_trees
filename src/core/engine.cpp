@@ -9,6 +9,7 @@
 #include <gameplay/gameplay_system.hpp>
 #include <gameplay/flee_node.hpp>
 #include <gameplay/movement_component.hpp>
+#include <gameplay/move_random_node.hpp>
 #include <gameplay/move_to_node.hpp>
 #include <gameplay/selection_node.hpp>
 #include <gameplay/sequence_node.hpp>
@@ -48,10 +49,7 @@ namespace core {
 		auto& uf = bt.root<gameplay::until_fail_node>();
 
 		auto& sn = uf.child<gameplay::sequence_node>();
-		sn.emplace_back<gameplay::move_to_node>(station.id(), 20.f);
-		sn.emplace_back<gameplay::stop_movement_node>();
-		sn.emplace_back<gameplay::flee_node>(station.id(), 200.f);
-		sn.emplace_back<gameplay::stop_movement_node>();
+		sn.emplace_back<gameplay::move_random_node>(station.id(), 200.f);
 	}
 
 	engine::~engine() {
