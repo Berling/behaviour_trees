@@ -28,8 +28,9 @@ namespace gameplay {
         node_state update(float delta_time);
 
         template <typename t, typename... arguments>
-        void emplace_back(arguments&&... args) {
+        auto& emplace_back(arguments&&... args) {
             nodes_.emplace_back(std::make_unique<t>(engine_, owner_, this, std::forward<arguments>(args)...));
+            return *static_cast<t*>(nodes_.back().get());
         }
     };
 }

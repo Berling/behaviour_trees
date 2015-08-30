@@ -7,11 +7,14 @@
 #include <core/engine.hpp>
 #include <gameplay/alignment_component.hpp>
 #include <gameplay/behaviour_tree_component.hpp>
+#include <gameplay/enemy_sighted_node.hpp>
 #include <gameplay/gameplay_system.hpp>
 #include <gameplay/flee_node.hpp>
+#include <gameplay/invert_node.hpp>
 #include <gameplay/movement_component.hpp>
 #include <gameplay/move_random_node.hpp>
 #include <gameplay/move_to_node.hpp>
+#include <gameplay/parallel_node.hpp>
 #include <gameplay/selection_node.hpp>
 #include <gameplay/sequence_node.hpp>
 #include <gameplay/stop_movement_node.hpp>
@@ -48,8 +51,18 @@ namespace core {
 		auto& mc = s.emplace_back<gameplay::movement_component>();
 		auto& bt = s.emplace_back<gameplay::behaviour_tree_component>();
 		auto& uf = bt.root<gameplay::until_fail_node>();
-		auto& sn = uf.child<gameplay::sequence_node>();
+		auto& main_sequence = uf.child<gameplay::sequence_node>();
+
+		auto& check_enemy_inv = main_sequence.emplace_back<gameplay::invert_node>();
+		auto& check_enemy = check_enemy_inv.child<gameplay::until_fail_node>();
+		auto& sn = check_enemy.child<gameplay::parallel_node>();
+		auto& es = sn.emplace_back<gameplay::sequence_node>();
+		auto& inv = es.emplace_back<gameplay::invert_node>();
+		inv.child<gameplay::enemy_sighted_node>(200.f);
 		sn.emplace_back<gameplay::move_random_node>(station.id(), 200.f);
+
+		auto& stop_inv = main_sequence.emplace_back<gameplay::invert_node>();
+		stop_inv.child<gameplay::stop_movement_node>();
 
 		auto& klingon = entity_manager_.emplace_back(glm::vec2{700.f, 500.f}, 0.f, glm::vec2{1.f});
 		klingon.emplace_back<rendering::sprite_component>("textures/klingon.dds");
@@ -57,7 +70,7 @@ namespace core {
 		klingon.emplace_back<gameplay::movement_component>();
 		auto& kbt = klingon.emplace_back<gameplay::behaviour_tree_component>();
 		auto& kuf = kbt.root<gameplay::until_fail_node>();
-		auto& ksn = kuf.child<gameplay::sequence_node>();
+		auto& ksn = kuf.child<gameplay::parallel_node>();
 		ksn.emplace_back<gameplay::move_random_node>(station.id(), 800.f);
 	}
 

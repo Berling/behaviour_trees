@@ -1,5 +1,5 @@
-#ifndef __GAMEPLAY_SEQUENCE_NODE_HPP__
-#define __GAMEPLAY_SEQUENCE_NODE_HPP__
+#ifndef __GAMEPLAY_PARALLEL_NODE_HPP__
+#define __GAMEPLAY_PARALLEL_NODE_HPP__
 
 #include <memory>
 #include <vector>
@@ -16,14 +16,13 @@ namespace gameplay {
 }
 
 namespace gameplay {
-    class sequence_node : public node {
+    class parallel_node : public node {
     private:
         std::vector<std::unique_ptr<node>> nodes_;
-        size_t current_node_;
 
     public:
-        sequence_node(core::engine& engine, behaviour_tree_component& owner, node* parent) noexcept;
-        ~sequence_node() = default;
+        parallel_node(core::engine& engine, behaviour_tree_component& owner, node* parent);
+        ~parallel_node() = default;
 
         node_state update(float delta_time);
 
