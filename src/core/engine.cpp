@@ -41,7 +41,7 @@ namespace core {
 		auto& station_mc = station.emplace_back<gameplay::movement_component>();
 		station_mc.angular_velocity(glm::radians(30.f));
 
-		auto& s = entity_manager_.emplace_back(glm::vec2{0.f, 0.f}, 0.f, glm::vec2{1.f});
+		auto& s = entity_manager_.emplace_back(glm::vec2{200.f, 100.f}, 0.f, glm::vec2{1.f});
 		s.emplace_back<rendering::sprite_component>("textures/enterprise.dds");
 		auto& mc = s.emplace_back<gameplay::movement_component>();
 		auto& bt = s.emplace_back<gameplay::behaviour_tree_component>();
@@ -50,6 +50,14 @@ namespace core {
 
 		auto& sn = uf.child<gameplay::sequence_node>();
 		sn.emplace_back<gameplay::move_random_node>(station.id(), 200.f);
+
+		auto& klingon = entity_manager_.emplace_back(glm::vec2{700.f, 500.f}, 0.f, glm::vec2{1.f});
+		klingon.emplace_back<rendering::sprite_component>("textures/klingon.dds");
+		klingon.emplace_back<gameplay::movement_component>();
+		auto& kbt = klingon.emplace_back<gameplay::behaviour_tree_component>();
+		auto& kuf = kbt.root<gameplay::until_fail_node>();
+		auto& ksn = kuf.child<gameplay::sequence_node>();
+		ksn.emplace_back<gameplay::move_random_node>(station.id(), 800.f);
 	}
 
 	engine::~engine() {
