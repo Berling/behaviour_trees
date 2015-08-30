@@ -43,10 +43,10 @@ namespace gameplay {
         owner_.rotation(rotation);
 
         auto& rendering_system = engine_.rendering_system();
-        rendering_system.draw_line(position, position + velocity_, glm::vec3{1.f, 0.f, 0.f});
-        rendering_system.draw_line(position, position + acceleration_, glm::vec3{0.f, 1.f, 0.f});
+        //rendering_system.draw_line(position, position + velocity_, glm::vec3{1.f, 0.f, 0.f});
+        //rendering_system.draw_line(position, position + acceleration_, glm::vec3{0.f, 1.f, 0.f});
 
         auto direction = glm::vec2{glm::cos(rotation), glm::sin(rotation)} * 10.f;
-        rendering_system.draw_line(position, position + direction, glm::vec3{1.f});
+        //rendering_system.draw_line(position, position + direction, glm::vec3{1.f});
     }
 }
