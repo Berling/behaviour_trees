@@ -6,6 +6,7 @@
 
 #include <core/engine.hpp>
 #include <gameplay/alignment_component.hpp>
+#include <gameplay/away_from_node.hpp>
 #include <gameplay/behaviour_tree_component.hpp>
 #include <gameplay/enemy_sighted_node.hpp>
 #include <gameplay/gameplay_system.hpp>
@@ -58,14 +59,22 @@ namespace core {
 		auto& check_enemy_inv = main_sequence.emplace_back<gameplay::invert_node>();
 		auto& check_enemy = check_enemy_inv.child<gameplay::until_fail_node>();
 		auto& sn = check_enemy.child<gameplay::parallel_node>();
-		auto& es = sn.emplace_back<gameplay::sequence_node>();
-		auto& inv = es.emplace_back<gameplay::invert_node>();
+		auto& inv = sn.emplace_back<gameplay::invert_node>();
 		inv.child<gameplay::enemy_sighted_node>(200.f);
 		sn.emplace_back<gameplay::move_random_node>(station.id(), 200.f);
 
-		auto& follow_enemy = main_sequence.emplace_back<gameplay::until_fail_node>();
+		auto& follow_enemy_inv = main_sequence.emplace_back<gameplay::invert_node>();
+		auto& follow_enemy = follow_enemy_inv.child<gameplay::until_fail_node>();
 		auto& follow_enemy_sequence = follow_enemy.child<gameplay::parallel_node>();
 		follow_enemy_sequence.emplace_back<gameplay::move_to_node>(0, 2.f);
+		auto& inv_away = follow_enemy_sequence.emplace_back<gameplay::invert_node>();
+		inv_away.child<gameplay::away_from_node>(station.id(), 600.f);
+
+		auto& go_away_inv = main_sequence.emplace_back<gameplay::invert_node>();
+		auto& go_away = go_away_inv.child<gameplay::until_fail_node>();
+		auto& go_away_parallel = go_away.child<gameplay::parallel_node>();
+		go_away_parallel.emplace_back<gameplay::move_to_node>(station.id(), 2.f);
+		go_away_parallel.emplace_back<gameplay::enemy_sighted_node>(200.f);
 
 
 		auto& klingon = entity_manager_.emplace_back(glm::vec2{700.f, 500.f}, 0.f, glm::vec2{1.f});
@@ -75,8 +84,27 @@ namespace core {
 		klingon.emplace_back<gameplay::movement_component>();
 		auto& kbt = klingon.emplace_back<gameplay::behaviour_tree_component>();
 		auto& kuf = kbt.root<gameplay::until_fail_node>();
-		auto& ksn = kuf.child<gameplay::parallel_node>();
-		ksn.emplace_back<gameplay::move_random_node>(station.id(), 800.f);
+		auto& klingon_main_sequence = kuf.child<gameplay::sequence_node>();
+
+		auto& klingon_check_enemy_inv = klingon_main_sequence.emplace_back<gameplay::invert_node>();
+		auto& klingon_check_enemy = klingon_check_enemy_inv.child<gameplay::until_fail_node>();
+		auto& klingon_sn = klingon_check_enemy.child<gameplay::parallel_node>();
+		auto& klingon_inv = klingon_sn.emplace_back<gameplay::invert_node>();
+		klingon_inv.child<gameplay::enemy_sighted_node>(200.f);
+		klingon_sn.emplace_back<gameplay::move_random_node>(station.id(), 600.f);
+
+		auto& klingon_flee_enemy_inv = klingon_main_sequence.emplace_back<gameplay::invert_node>();
+		auto& klingon_flee_enemy = klingon_flee_enemy_inv.child<gameplay::until_fail_node>();
+		auto& klingon_flee_enemy_sequence = klingon_flee_enemy.child<gameplay::parallel_node>();
+		klingon_flee_enemy_sequence.emplace_back<gameplay::flee_node>(0, 400.f);
+		auto& klingon_inv_away = klingon_flee_enemy_sequence.emplace_back<gameplay::invert_node>();
+		klingon_inv_away.child<gameplay::away_from_node>(0, 800.f);
+
+		auto& klingon_go_back_inv = klingon_main_sequence.emplace_back<gameplay::invert_node>();
+		auto& klingon_go_back = klingon_go_back_inv.child<gameplay::until_fail_node>();
+		auto& klingon_go_back_parallel = klingon_go_back.child<gameplay::parallel_node>();
+		klingon_go_back_parallel.emplace_back<gameplay::flee_node>(station.id(), 200.f);
+		klingon_go_back_parallel.emplace_back<gameplay::enemy_sighted_node>(200.f);
 	}
 
 	engine::~engine() {
